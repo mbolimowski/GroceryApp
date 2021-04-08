@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "365138001908",
+    "firebase_url": "https://groceryapp-1ee50-default-rtdb.firebaseio.com",
     "project_id": "groceryapp-1ee50",
     "storage_bucket": "groceryapp-1ee50.appspot.com"
   },

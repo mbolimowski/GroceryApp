@@ -43,12 +43,14 @@ public class SplashActivity extends AppCompatActivity {
         //getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         //start login activity after 2 sec
         Handler handler = new Handler(Looper.myLooper());
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user == null){
                     //user not logged in start login activity
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
