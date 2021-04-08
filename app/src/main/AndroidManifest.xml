@@ -16,10 +16,19 @@
         android:roundIcon="@id/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp.NoActionBar">
+        <activity android:name=".RegisterUserActivity" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
+            android:theme="@style/Theme.GroceryApp.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".RegisterSellerActivity"
+            android:label="@string/title_activity_register"
+            android:theme="@style/Theme.GroceryApp.NoActionBar.NoActionBar" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.GroceryApp.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/Theme.GroceryApp.NoActionBar.NoActionBar" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>
