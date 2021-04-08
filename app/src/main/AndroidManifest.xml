@@ -16,6 +16,8 @@
         android:roundIcon="@id/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp.NoActionBar">
+        <activity android:name=".MainUserActivity"></activity>
+        <activity android:name=".MainSellerActivity" />
         <activity android:name=".RegisterUserActivity" />
         <activity
             android:name=".ForgotPasswordActivity"
