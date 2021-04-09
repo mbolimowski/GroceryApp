@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 public class MainSellerActivity extends AppCompatActivity {
 
     private TextView nameTv;
-    private ImageButton logoutBtn;
+    private ImageButton logoutBtn, editProfileBtn;
 
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
@@ -39,6 +39,7 @@ public class MainSellerActivity extends AppCompatActivity {
 
         nameTv = findViewById(R.id.nameTv);
         logoutBtn = findViewById(R.id.logoutBtn);
+        editProfileBtn = findViewById(R.id.editProfileBtn);
 
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
@@ -52,6 +53,14 @@ public class MainSellerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //make offline sign out go to login activity
                 makeMeOffline();
+            }
+        });
+
+        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // open edit profile activity
+                startActivity(new Intent(MainSellerActivity.this, ProfileEditSellerActivity.class));
             }
         });
     }
@@ -104,7 +113,7 @@ public class MainSellerActivity extends AppCompatActivity {
                             String name = "" + ds.child("name").getValue();
                             String accountType = "" + ds.child("accountType").getValue();
 
-                            nameTv.setText(name + " (" + accountType + ")");
+                            nameTv.setText(name);
                         }
                     }
 

@@ -19,6 +19,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,7 +30,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,23 +37,27 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class RegisterUserActivity extends AppCompatActivity implements LocationListener {
+public class ProfileEditUserActivity extends AppCompatActivity implements LocationListener {
 
     private ImageButton backBtn, gpsBtn;
     private ImageView profileIv;
-    private EditText nameEt, phoneEt, countryEt, stateEt, cityEt, addressEt, emailEt, passwordEt, cPasswordEt;
-    private Button registerBtn;
-    private TextView registerSellerTv;
+    private EditText nameEt, phoneEt, countryEt, stateEt, cityEt, addressEt;
+    private Button updateBtn;
 
     //permission constants
     private static final int LOCATION_REQUEST_CODE = 100;
@@ -82,9 +86,8 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_user);
+        setContentView(R.layout.activity_profile_edit_user);
 
-        //init UI views
         backBtn = findViewById(R.id.backBtn);
         gpsBtn = findViewById(R.id.gpsBtn);
         profileIv = findViewById(R.id.profileIv);
@@ -94,11 +97,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         stateEt = findViewById(R.id.stateEt);
         cityEt = findViewById(R.id.cityEt);
         addressEt = findViewById(R.id.addressEt);
-        emailEt = findViewById(R.id.emailEt);
-        passwordEt = findViewById(R.id.passwordEt);
-        cPasswordEt = findViewById(R.id.cPasswordEt);
-        registerBtn = findViewById(R.id.registerBtn);
-        registerSellerTv = findViewById(R.id.registerSellerTv);
+        updateBtn = findViewById(R.id.updateBtn);
 
         //init permissions array
         locationPermissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
@@ -110,11 +109,21 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
+        checkUser();
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //update profile's data
+                inputData();
+
             }
         });
         gpsBtn.setOnClickListener(new View.OnClickListener() {
@@ -138,23 +147,65 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                 showImagePickDialog();
             }
         });
-        registerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //register user
-                inputData();
-            }
-        });
-        registerSellerTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //open register seller activity
-                startActivity(new Intent(RegisterUserActivity.this, RegisterSellerActivity.class));
-            }
-        });
     }
 
-    private String fullName, phoneNumber, country, state, city, address, email, password, confirmPassword;
+    private void checkUser() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user == null){
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+        else{
+            loadMyInfo();
+        }
+    }
+
+    private void loadMyInfo() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.orderByChild("uid").equalTo(firebaseAuth.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds: dataSnapshot.getChildren()){
+                            String accountType = "" + ds.child("accountType").getValue();
+                            String address = "" + ds.child("address").getValue();
+                            String city = "" + ds.child("city").getValue();
+                            String state = "" + ds.child("state").getValue();
+                            String country = "" + ds.child("country").getValue();
+                            String email = "" + ds.child("email").getValue();
+                            latitude = Double.parseDouble("" + ds.child("latitude").getValue());
+                            longitude = Double.parseDouble("" + ds.child("longitude").getValue());
+                            String name = "" + ds.child("name").getValue();
+                            String phone = "" + ds.child("phone").getValue();
+                            String profileImage = "" + ds.child("profileImage").getValue();
+                            String timestamp = "" + ds.child("timestamp").getValue();
+                            String uid = "" + ds.child("uid").getValue();
+
+                            nameEt.setText(name);
+                            phoneEt.setText(phone);
+                            countryEt.setText(country);
+                            cityEt.setText(city);
+                            stateEt.setText(state);
+                            addressEt.setText(address);
+
+                            try {
+                                Picasso.get().load(profileImage).placeholder(R.drawable.ic_store_gray).into(profileIv);
+                            }
+                            catch (Exception e){
+                                profileIv.setImageResource(R.drawable.ic_person_gray);
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private String fullName, phoneNumber, country, state, city, address;
 
     private void inputData() {
         //input data
@@ -164,9 +215,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         state = stateEt.getText().toString().trim();
         city = cityEt.getText().toString().trim();
         address = addressEt.getText().toString().trim();
-        email = emailEt.getText().toString().trim();
-        password = passwordEt.getText().toString().trim();
-        confirmPassword = cPasswordEt.getText().toString().trim();
+
         //validate data
         if (TextUtils.isEmpty(fullName)) {
             Toast.makeText(this, "Enter Name...", Toast.LENGTH_SHORT).show();
@@ -180,57 +229,18 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
             Toast.makeText(this, "Please click GPS button to detect location...", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Invalid email pattern...", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (password.length() < 6) {
-            Toast.makeText(this, "Password must be atleast 6 characters long...", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords doesn't match to each other...", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        createAccount();
+
+        updateProfile();
     }
 
-    private void createAccount() {
-        progressDialog.setMessage("Creating Account...");
+    private void updateProfile() {
+        progressDialog.setMessage("Updating Profile...");
         progressDialog.show();
 
-        //create account
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        //account created
-                        saverFirebaseData();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //failed creating account
-                        progressDialog.dismiss();
-                        Toast.makeText(RegisterUserActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
-
-    private void saverFirebaseData() {
-        progressDialog.setMessage("Saving Account Info...");
-
-        String timestamp = "" + System.currentTimeMillis();
-
         if (imageUri == null) {
-            //save info without image
-
-            //setup data to save
+            //update info without image
+            //setup data to update
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("uid", "" + firebaseAuth.getUid());
-            hashMap.put("email", "" + email);
             hashMap.put("name", "" + fullName);
             hashMap.put("phone", "" + phoneNumber);
             hashMap.put("country", "" + country);
@@ -239,21 +249,16 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
             hashMap.put("address", "" + address);
             hashMap.put("latitude", "" + latitude);
             hashMap.put("longitude", "" + longitude);
-            hashMap.put("timestamp", "" + timestamp);
-            hashMap.put("accountType", "User");
-            hashMap.put("online", "true");
-            hashMap.put("profileImage", "");
 
-            //save to db
+            //update to db
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-            databaseReference.child(firebaseAuth.getUid()).setValue(hashMap)
+            databaseReference.child(firebaseAuth.getUid()).updateChildren(hashMap)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             //db updated
                             progressDialog.dismiss();
-                            startActivity(new Intent(RegisterUserActivity.this, MainUserActivity.class));
-                            finish();
+                            Toast.makeText(ProfileEditUserActivity.this, "Profile updated...", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -261,30 +266,29 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                         public void onFailure(@NonNull Exception e) {
                             //failed updating db
                             progressDialog.dismiss();
-                            startActivity(new Intent(RegisterUserActivity.this, MainUserActivity.class));
-                            finish();
+                            Toast.makeText(ProfileEditUserActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
-            //save info with image
+            //update info with image
 
+            /*--------Upload image first-------*/
             //name and path of image
             String filePathAndName = "profile_images/" + firebaseAuth.getUid();
-            //upload image
+            //get storage reference upload image
             StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathAndName);
             storageReference.putFile(imageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //get url od updated image
+                            //get url of updated image
                             Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!uriTask.isSuccessful()) ;
                             Uri downloadImageUri = uriTask.getResult();
                             if (uriTask.isSuccessful()) {
-                                //setup data to save
+                                //image url received, now update db
+                                //setup data to update
                                 HashMap<String, Object> hashMap = new HashMap<>();
-                                hashMap.put("uid", "" + firebaseAuth.getUid());
-                                hashMap.put("email", "" + email);
                                 hashMap.put("name", "" + fullName);
                                 hashMap.put("phone", "" + phoneNumber);
                                 hashMap.put("country", "" + country);
@@ -293,21 +297,17 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                                 hashMap.put("address", "" + address);
                                 hashMap.put("latitude", "" + latitude);
                                 hashMap.put("longitude", "" + longitude);
-                                hashMap.put("timestamp", "" + timestamp);
-                                hashMap.put("accountType", "User");
-                                hashMap.put("online", "true");
-                                hashMap.put("profileImage", "" + downloadImageUri);//url of downloaded image
+                                hashMap.put("profileImage", "" + downloadImageUri);
 
-                                //save to db
+                                //update to db
                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                                databaseReference.child(firebaseAuth.getUid()).setValue(hashMap)
+                                databaseReference.child(firebaseAuth.getUid()).updateChildren(hashMap)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 //db updated
                                                 progressDialog.dismiss();
-                                                startActivity(new Intent(RegisterUserActivity.this, MainUserActivity.class));
-                                                finish();
+                                                Toast.makeText(ProfileEditUserActivity.this, "Profile updated...", Toast.LENGTH_SHORT).show();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -315,8 +315,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                                             public void onFailure(@NonNull Exception e) {
                                                 //failed updating db
                                                 progressDialog.dismiss();
-                                                startActivity(new Intent(RegisterUserActivity.this, MainUserActivity.class));
-                                                finish();
+                                                Toast.makeText(ProfileEditUserActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             }
@@ -326,7 +325,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(RegisterUserActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileEditUserActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -386,7 +385,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     private void detectLocation() {
         Toast.makeText(this, "Please wait...", Toast.LENGTH_LONG).show();
 
-        //TODO check working
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
