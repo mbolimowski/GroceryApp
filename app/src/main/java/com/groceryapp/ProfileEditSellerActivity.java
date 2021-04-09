@@ -91,17 +91,17 @@ public class ProfileEditSellerActivity extends AppCompatActivity implements Loca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit_seller);
 
-        backBtn = findViewById(R.id.backBtnS);
-        gpsBtn = findViewById(R.id.gpsBtnS);
-        profileIv = findViewById(R.id.profileIvS);
-        nameEt = findViewById(R.id.nameEtS);
-        shopNameEt = findViewById(R.id.shopNameEtS);
-        phoneEt = findViewById(R.id.phoneEtS);
-        deliveryFeeEt = findViewById(R.id.deliveryFeeEtS);
-        countryEt = findViewById(R.id.countryEtS);
-        stateEt = findViewById(R.id.stateEtS);
-        cityEt = findViewById(R.id.cityEtS);
-        addressEt = findViewById(R.id.addressEtS);
+        backBtn = findViewById(R.id.backBtn);
+        gpsBtn = findViewById(R.id.gpsBtn);
+        profileIv = findViewById(R.id.profileIv);
+        nameEt = findViewById(R.id.nameEt);
+        shopNameEt = findViewById(R.id.shopNameEt);
+        phoneEt = findViewById(R.id.phoneEt);
+        deliveryFeeEt = findViewById(R.id.deliveryFeeEt);
+        countryEt = findViewById(R.id.countryEt);
+        stateEt = findViewById(R.id.stateEt);
+        cityEt = findViewById(R.id.cityEt);
+        addressEt = findViewById(R.id.addressEt);
         shopOpenSwitch = findViewById(R.id.shopOpenSwitch);
         updateBtn = findViewById(R.id.updateBtn);
 

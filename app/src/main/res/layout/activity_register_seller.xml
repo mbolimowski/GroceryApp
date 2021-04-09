@@ -15,7 +15,7 @@
         android:background="@drawable/shape_rect01">
 
         <ImageButton
-            android:id="@+id/backBtnS"
+            android:id="@+id/backBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_back_white"
@@ -31,7 +31,7 @@
             android:textColor="@color/colorWhite"/>
 
         <ImageButton
-            android:id="@+id/gpsBtnS"
+            android:id="@+id/gpsBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_gps_white"
@@ -41,7 +41,7 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/iconS"
+        android:id="@+id/icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/shape_circle01"
@@ -54,14 +54,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/iconS">
+        android:layout_below="@+id/icon">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.blogspot.atifsoftwares.circularimageview.CircularImageView
-                android:id="@+id/profileIvS"
+                android:id="@+id/profileIv"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
@@ -72,8 +72,8 @@
                 />
 
             <EditText
-                android:id="@+id/nameEtS"
-                android:layout_below="@+id/profileIvS"
+                android:id="@+id/nameEt"
+                android:layout_below="@+id/profileIv"
                 android:hint="Full Name"
                 android:padding="10dp"
                 android:drawableStart="@drawable/ic_person_gray"
@@ -85,8 +85,8 @@
                 android:background="@drawable/shape_rect02"/>
 
             <EditText
-                android:id="@+id/shopNameEtS"
-                android:layout_below="@+id/nameEtS"
+                android:id="@+id/shopNameEt"
+                android:layout_below="@+id/nameEt"
                 android:hint="Shop Name"
                 android:padding="10dp"
                 android:drawableStart="@drawable/ic_store_gray"
@@ -98,8 +98,8 @@
                 android:background="@drawable/shape_rect02"/>
 
             <EditText
-                android:id="@+id/phoneEtS"
-                android:layout_below="@+id/shopNameEtS"
+                android:id="@+id/phoneEt"
+                android:layout_below="@+id/shopNameEt"
                 android:hint="Phone"
                 android:padding="10dp"
                 android:drawableStart="@drawable/ic_phone_gray"
@@ -111,8 +111,8 @@
                 android:background="@drawable/shape_rect02"/>
 
             <EditText
-                android:id="@+id/deliveryFeeEtS"
-                android:layout_below="@+id/phoneEtS"
+                android:id="@+id/deliveryFeeEt"
+                android:layout_below="@+id/phoneEt"
                 android:hint="Delivery Fee"
                 android:padding="10dp"
                 android:drawableStart="@drawable/ic_shipping_gray"
@@ -124,15 +124,15 @@
                 android:background="@drawable/shape_rect02"/>
 
             <LinearLayout
-                android:id="@+id/addressLlS"
-                android:layout_below="@+id/deliveryFeeEtS"
+                android:id="@+id/addressLl"
+                android:layout_below="@+id/deliveryFeeEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/countryEtS"
-                    android:layout_below="@+id/nameEtS"
+                    android:id="@+id/countryEt"
+                    android:layout_below="@+id/deliveryFeeEt"
                     android:hint="Country"
                     android:padding="10dp"
                     android:drawableStart="@drawable/ic_location_gray"
@@ -145,8 +145,8 @@
                     android:background="@drawable/shape_rect02"/>
 
                 <EditText
-                    android:id="@+id/stateEtS"
-                    android:layout_below="@+id/nameEtS"
+                    android:id="@+id/stateEt"
+                    android:layout_below="@+id/deliveryFeeEt"
                     android:hint="State"
                     android:padding="10dp"
                     android:drawableStart="@drawable/ic_location_gray"
@@ -160,7 +160,7 @@
 
                 <EditText
                     android:id="@+id/cityEtS"
-                    android:layout_below="@+id/nameEtS"
+                    android:layout_below="@+id/deliveryFeeEt"
                     android:hint="City"
                     android:padding="10dp"
                     android:drawableStart="@drawable/ic_location_gray"
@@ -175,8 +175,8 @@
             </LinearLayout>
 
             <EditText
-                android:id="@+id/addressEtS"
-                android:layout_below="@+id/addressLlS"
+                android:id="@+id/addressEt"
+                android:layout_below="@+id/addressLl"
                 android:hint="Full Address"
                 android:padding="10dp"
                 android:drawableStart="@drawable/ic_location_gray"
@@ -189,8 +189,8 @@
                 android:background="@drawable/shape_rect02"/>
 
             <EditText
-                android:id="@+id/emailEtS"
-                android:layout_below="@+id/addressEtS"
+                android:id="@+id/emailEt"
+                android:layout_below="@+id/addressEt"
                 android:hint="Email"
                 android:padding="10dp"
                 android:drawableStart="@drawable/ic_mail_gray"
@@ -202,8 +202,8 @@
                 android:background="@drawable/shape_rect02"/>
 
             <EditText
-                android:id="@+id/passwordEtS"
-                android:layout_below="@+id/emailEtS"
+                android:id="@+id/passwordEt"
+                android:layout_below="@+id/emailEt"
                 android:hint="Password"
                 android:padding="10dp"
                 android:drawableStart="@drawable/ic_lock_gray"
@@ -215,8 +215,8 @@
                 android:background="@drawable/shape_rect02"/>
 
             <EditText
-                android:id="@+id/cPasswordEtS"
-                android:layout_below="@+id/passwordEtS"
+                android:id="@+id/cPasswordEt"
+                android:layout_below="@+id/passwordEt"
                 android:hint="Confirm Password"
                 android:padding="10dp"
                 android:drawableStart="@drawable/ic_lock_gray"
@@ -228,14 +228,14 @@
                 android:background="@drawable/shape_rect02"/>
 
             <Button
-                android:id="@+id/registerBtnS"
+                android:id="@+id/registerBtn"
                 android:text="Register"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:minWidth="120dp"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/cPasswordEtS"/>
+                android:layout_below="@+id/cPasswordEt"/>
 
         </RelativeLayout>
 

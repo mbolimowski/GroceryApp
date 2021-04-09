@@ -16,7 +16,8 @@
         android:roundIcon="@id/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp.NoActionBar">
-        <activity android:name=".ProfileEditSellerActivity"></activity>
+        <activity android:name=".AddProductActivity"></activity>
+        <activity android:name=".ProfileEditSellerActivity" />
         <activity android:name=".ProfileEditUserActivity" />
         <activity android:name=".MainUserActivity" />
         <activity android:name=".MainSellerActivity" />
