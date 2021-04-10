@@ -16,4 +16,20 @@ public class Constants {
             "Vegetables",
             "Others"
     };
+
+    public static final String[] productCategories1 = {
+            "All",
+            "Beverages",
+            "Beauty & Personal Care",
+            "Baby Kids",
+            "Biscuits Snacks & Chocolates",
+            "Breakfast & Dairy",
+            "Cooking Needs",
+            "Frozen Food",
+            "Fruits",
+            "Pet Care",
+            "Pharmacy",
+            "Vegetables",
+            "Others"
+    };
 }
