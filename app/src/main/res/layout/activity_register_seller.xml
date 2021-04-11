@@ -159,7 +159,7 @@
                     android:background="@drawable/shape_rect02"/>
 
                 <EditText
-                    android:id="@+id/cityEtS"
+                    android:id="@+id/cityEt"
                     android:layout_below="@+id/deliveryFeeEt"
                     android:hint="City"
                     android:padding="10dp"
