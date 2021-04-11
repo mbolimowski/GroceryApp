@@ -16,26 +16,27 @@
         android:roundIcon="@id/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp.NoActionBar">
-        <activity android:name=".EditProductActivity"></activity>
-        <activity android:name=".AddProductActivity" />
-        <activity android:name=".ProfileEditSellerActivity" />
-        <activity android:name=".ProfileEditUserActivity" />
-        <activity android:name=".MainUserActivity" />
-        <activity android:name=".MainSellerActivity" />
-        <activity android:name=".RegisterUserActivity" />
+        <activity android:name=".activities.ShopDetailsActivity"></activity>
+        <activity android:name=".activities.EditProductActivity" />
+        <activity android:name=".activities.AddProductActivity" />
+        <activity android:name=".activities.ProfileEditSellerActivity" />
+        <activity android:name=".activities.ProfileEditUserActivity" />
+        <activity android:name=".activities.MainUserActivity" />
+        <activity android:name=".activities.MainSellerActivity" />
+        <activity android:name=".activities.RegisterUserActivity" />
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".activities.ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
             android:theme="@style/Theme.GroceryApp.NoActionBar.NoActionBar" />
         <activity
-            android:name=".RegisterSellerActivity"
+            android:name=".activities.RegisterSellerActivity"
             android:label="@string/title_activity_register"
             android:theme="@style/Theme.GroceryApp.NoActionBar.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.GroceryApp.NoActionBar.NoActionBar" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

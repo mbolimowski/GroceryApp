@@ -1,4 +1,4 @@
-package com.groceryapp;
+package com.groceryapp.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,6 +24,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.groceryapp.FilterProduct;
+import com.groceryapp.R;
+import com.groceryapp.activities.EditProductActivity;
+import com.groceryapp.models.ModelProduct;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -81,6 +85,7 @@ public class AdapterProductSeller extends RecyclerView.Adapter<AdapterProductSel
             //product is not on discount
             holder.discountedPriceTv.setVisibility(View.GONE);
             holder.discountedNoteTv.setVisibility(View.GONE);
+            holder.originalPriceTv.setPaintFlags(0);
         }
         try {
             Picasso.get().load(icon).placeholder(R.drawable.ic_add_shopping_primary).into(holder.productIconIv);

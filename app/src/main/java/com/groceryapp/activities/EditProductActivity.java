@@ -1,4 +1,4 @@
-package com.groceryapp;
+package com.groceryapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,14 +11,9 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -36,20 +31,26 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.groceryapp.Constants;
+import com.groceryapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
-public class AddProductActivity extends AppCompatActivity {
+public class EditProductActivity extends AppCompatActivity {
+
+    private String productId;
 
     private ImageButton backBtn;
-    private Button addProductBtn;
+    private Button updateProductBtn;
     private ImageView productIconIv;
     private EditText titleEt, descriptionEt, quantityEt, priceEt, discountedPriceEt, discountedNoteEt;
     private TextView categoryTv;
@@ -77,10 +78,13 @@ public class AddProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_product);
+        setContentView(R.layout.activity_edit_product);
+
+        //get id of the product from intent
+        productId = getIntent().getStringExtra("productId");
 
         backBtn = findViewById(R.id.backBtn);
-        addProductBtn = findViewById(R.id.addProductBtn);
+        updateProductBtn = findViewById(R.id.updateProductBtn);
         productIconIv = findViewById(R.id.productIconIv);
         titleEt = findViewById(R.id.titleEt);
         descriptionEt = findViewById(R.id.descriptionEt);
@@ -103,6 +107,8 @@ public class AddProductActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
+
+        loadProductDetails();//to set on views
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,32 +146,72 @@ public class AddProductActivity extends AppCompatActivity {
                 categoryDialog();
             }
         });
-        addProductBtn.setOnClickListener(new View.OnClickListener() {
+        updateProductBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //flow:
                 //1) input data
                 //2) validate data
-                //3) add data to db
+                //3) update data to db
                 inputData();
             }
         });
     }
 
-    private void categoryDialog() {
-        //dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Product Category")
-                .setItems(Constants.productCategories, new DialogInterface.OnClickListener() {
+    private void loadProductDetails() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.child(firebaseAuth.getUid()).child("Products").child(productId)
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //get picked category
-                        String category = Constants.productCategories[which];
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //get data
+                        String productId = "" + dataSnapshot.child("productId").getValue();
+                        String productTitle = "" + dataSnapshot.child("productTitle").getValue();
+                        String productDescription = "" + dataSnapshot.child("productDescription").getValue();
+                        String productCategory = "" + dataSnapshot.child("productCategory").getValue();
+                        String productQuantity = "" + dataSnapshot.child("productQuantity").getValue();
+                        String productIcon = "" + dataSnapshot.child("productIcon").getValue();
+                        String originalPrice = "" + dataSnapshot.child("originalPrice").getValue();
+                        String discountPrice = "" + dataSnapshot.child("discountPrice").getValue();
+                        String discountNote = "" + dataSnapshot.child("discountNote").getValue();
+                        String discountAvailable = "" + dataSnapshot.child("discountAvailable").getValue();
+                        String timestamp = "" + dataSnapshot.child("timestamp").getValue();
+                        String uid = "" + dataSnapshot.child("uid").getValue();
 
-                        //set picked category
-                        categoryTv.setText(category);
+                        //set data to views
+                        if (discountAvailable.equals("true")){
+                            discountSwitch.setChecked(true);
+
+                            discountedPriceEt.setVisibility(View.VISIBLE);
+                            discountedNoteEt.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            discountSwitch.setChecked(false);
+
+                            discountedPriceEt.setVisibility(View.GONE);
+                            discountedNoteEt.setVisibility(View.GONE);
+                        }
+                        titleEt.setText(productTitle);
+                        descriptionEt.setText(productDescription);
+                        categoryTv.setText(productCategory);
+                        discountedNoteEt.setText(discountNote);
+                        quantityEt.setText(productQuantity);
+                        priceEt.setText(originalPrice);
+                        discountedPriceEt.setText(discountPrice);
+
+                        try {
+                            Picasso.get().load(productIcon).placeholder(R.drawable.ic_add_shopping_white).into(productIconIv);
+                        }
+                        catch (Exception e){
+                            productIconIv.setImageResource(R.drawable.ic_add_shopping_white);
+                        }
                     }
-                }).show();
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private String productTitle, productDescription, productCategory, productQuantity, originalPrice, discountPrice, discountNote;
@@ -208,43 +254,37 @@ public class AddProductActivity extends AppCompatActivity {
             discountNote = "";
         }
 
-        addProduct();
+        updateProduct();
     }
 
-    private void addProduct() {
-        //3)add data to db
-        progressDialog.setMessage("Adding Product...");
+    private void updateProduct() {
+        //show progress
+        progressDialog.setMessage("Updating Product...");
         progressDialog.show();
-
-        final String timestamp = "" + System.currentTimeMillis();
 
         if (imageUri == null) {
             //update info without image
-            //setup data to update
+            //setup data in hash map to update
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("productId", "" + timestamp);
             hashMap.put("productTitle", "" + productTitle);
             hashMap.put("productDescription", "" + productDescription);
             hashMap.put("productCategory", "" + productCategory);
             hashMap.put("productQuantity", "" + productQuantity);
-            hashMap.put("productIcon", "");
             hashMap.put("originalPrice", "" + originalPrice);
             hashMap.put("discountPrice", "" + discountPrice);
             hashMap.put("discountNote", "" + discountNote);
             hashMap.put("discountAvailable", "" + discountAvailable);
-            hashMap.put("timestamp", "" + timestamp);
-            hashMap.put("uid", "" + firebaseAuth.getUid());
+            //hashMap.put("uid", "" + firebaseAuth.getUid());
 
             //add to db
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-            databaseReference.child(firebaseAuth.getUid()).child("Products").child(timestamp).setValue(hashMap)
+            databaseReference.child(firebaseAuth.getUid()).child("Products").child(productId).updateChildren(hashMap)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            //added to db
+                            //update to db
                             progressDialog.dismiss();
-                            Toast.makeText(AddProductActivity.this, "Product added...", Toast.LENGTH_SHORT).show();
-                            clearData();
+                            Toast.makeText(EditProductActivity.this, "Product Updated...", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -252,7 +292,7 @@ public class AddProductActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             //failed adding to db
                             progressDialog.dismiss();
-                            Toast.makeText(AddProductActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProductActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
@@ -260,7 +300,7 @@ public class AddProductActivity extends AppCompatActivity {
 
             /*--------First upload image to storage-------*/
             //name and path of image
-            String filePathAndName = "profile_images/" + timestamp;
+            String filePathAndName = "profile_images/" + productId;//overload previous image using same id
             //get storage reference upload image
             StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathAndName);
             storageReference.putFile(imageUri)
@@ -275,7 +315,6 @@ public class AddProductActivity extends AppCompatActivity {
                                 //image url received, now update db
                                 //setup data to update
                                 HashMap<String, Object> hashMap = new HashMap<>();
-                                hashMap.put("productId", "" + timestamp);
                                 hashMap.put("productTitle", "" + productTitle);
                                 hashMap.put("productDescription", "" + productDescription);
                                 hashMap.put("productCategory", "" + productCategory);
@@ -285,19 +324,17 @@ public class AddProductActivity extends AppCompatActivity {
                                 hashMap.put("discountPrice", "" + discountPrice);
                                 hashMap.put("discountNote", "" + discountNote);
                                 hashMap.put("discountAvailable", "" + discountAvailable);
-                                hashMap.put("timestamp", "" + timestamp);
-                                hashMap.put("uid", "" + firebaseAuth.getUid());
+                                //hashMap.put("uid", "" + firebaseAuth.getUid());
 
                                 //add to db
                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                                databaseReference.child(firebaseAuth.getUid()).child("Products").child(timestamp).setValue(hashMap)
+                                databaseReference.child(firebaseAuth.getUid()).child("Products").child(productId).updateChildren(hashMap)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 //added to db
                                                 progressDialog.dismiss();
-                                                Toast.makeText(AddProductActivity.this, "Product added...", Toast.LENGTH_SHORT).show();
-                                                clearData();
+                                                Toast.makeText(EditProductActivity.this, "Product updated...", Toast.LENGTH_SHORT).show();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -305,7 +342,7 @@ public class AddProductActivity extends AppCompatActivity {
                                             public void onFailure(@NonNull Exception e) {
                                                 //failed adding to db
                                                 progressDialog.dismiss();
-                                                Toast.makeText(AddProductActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(EditProductActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             }
@@ -315,24 +352,27 @@ public class AddProductActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(AddProductActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProductActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
         }
     }
 
-    private void clearData() {
-        //clear data after uploading product
-        titleEt.setText("");
-        descriptionEt.setText("");
-        categoryTv.setText("");
-        quantityEt.setText("");
-        priceEt.setText("");
-        discountedPriceEt.setText("");
-        discountedNoteEt.setText("");
-        productIconIv.setImageResource(R.drawable.ic_add_shopping_primary);
-        imageUri = null;
+    private void categoryDialog() {
+        //dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Product Category")
+                .setItems(Constants.productCategories, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //get picked category
+                        String category = Constants.productCategories[which];
+
+                        //set picked category
+                        categoryTv.setText(category);
+                    }
+                }).show();
     }
 
     private void showImagePickDialog() {

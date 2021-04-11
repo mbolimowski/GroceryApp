@@ -1,4 +1,4 @@
-package com.groceryapp;
+package com.groceryapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.groceryapp.R;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -66,7 +67,30 @@ public class SplashActivity extends AppCompatActivity {
     private void checkUserType() {
         //if user is seller, start seller main screen
         // if user is buyer, start useer main screen
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.child(firebaseAuth.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String accountType = "" + dataSnapshot.child("accountType").getValue();
+                        if(accountType.equals("Seller")){
+                            //user is seller
+                            startActivity(new Intent(SplashActivity.this, MainSellerActivity.class));
+                            finish();
+                        }
+                        else{
+                            //user is buyer
+                            startActivity(new Intent(SplashActivity.this, MainUserActivity.class));
+                            finish();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                    }
+                });
+
+/*
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.orderByChild("uid").equalTo(firebaseAuth.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -91,5 +115,7 @@ public class SplashActivity extends AppCompatActivity {
 
                     }
                 });
+ */
+
     }
 }

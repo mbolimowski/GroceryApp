@@ -1,4 +1,4 @@
-package com.groceryapp;
+package com.groceryapp.models;
 
 public class ModelProduct {
     private String productId, productTitle, productDescription, productCategory, productQuantity, productIcon,

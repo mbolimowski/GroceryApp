@@ -2,17 +2,17 @@ package com.groceryapp;
 
 import android.widget.Filter;
 
-import com.groceryapp.adapters.AdapterProductSeller;
+import com.groceryapp.adapters.AdapterProductUser;
 import com.groceryapp.models.ModelProduct;
 
 import java.util.ArrayList;
 
-public class FilterProduct extends Filter {
+public class FilterProductUser extends Filter {
 
-    private AdapterProductSeller adapter;
+    private AdapterProductUser adapter;
     private ArrayList<ModelProduct> filterList;
 
-    public FilterProduct(AdapterProductSeller adapter, ArrayList<ModelProduct> filterList) {
+    public FilterProductUser(AdapterProductUser adapter, ArrayList<ModelProduct> filterList) {
         this.adapter = adapter;
         this.filterList = filterList;
     }

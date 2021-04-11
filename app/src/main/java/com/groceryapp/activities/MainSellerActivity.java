@@ -1,4 +1,4 @@
-package com.groceryapp;
+package com.groceryapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,11 +28,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.groceryapp.adapters.AdapterProductSeller;
+import com.groceryapp.Constants;
+import com.groceryapp.models.ModelProduct;
+import com.groceryapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 public class MainSellerActivity extends AppCompatActivity {
 
