@@ -124,6 +124,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--RecyclerView show orders-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ordersRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_order_user"/>
+
     </RelativeLayout>
 
 </RelativeLayout>
