@@ -3,7 +3,9 @@ package com.groceryapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +13,7 @@ import android.os.Looper;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,10 +28,37 @@ public class SplashActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
 
+    private RelativeLayout layoutRl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        layoutRl = findViewById(R.id.layoutRl);
+
+        SharedPreferences sharedPref = getSharedPreferences("settingsLayoutsColors", MODE_PRIVATE);
+        String txt = sharedPref.getString("dane", "default");
+        if(txt.isEmpty()){
+            layoutRl.setBackgroundResource(R.drawable.shape_rect01);
+        }
+        else{
+            switch (txt){
+                case "default":
+                    layoutRl.setBackgroundResource(R.drawable.shape_rect01);
+                    break;
+                case "option2":
+                    layoutRl.setBackgroundResource(R.drawable.shape_rect_option2);
+                    break;
+                case "option3":
+                    layoutRl.setBackgroundResource(R.drawable.shape_rect_option3);
+                    break;
+                case "option4":
+                    layoutRl.setBackgroundResource(R.drawable.shape_rect_option4);
+                    break;
+            };
+        }
+
         //make fullscreen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             final WindowInsetsController insetsController = getWindow().getInsetsController();

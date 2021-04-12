@@ -10,6 +10,8 @@
     <color name="colorGreen">#4CAF50</color>
     <color name="colorRed">#F4511E</color>
     <color name="colorGray00">#f5f0f0</color>
+    <color name="colorYellow">#FFC107</color>
+    <color name="colorPurple">#673AB7</color>
 
 
 </resources>

@@ -9,6 +9,7 @@
 
     <!--Toolbar-->
     <RelativeLayout
+        android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:padding="10dp"

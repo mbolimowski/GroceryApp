@@ -13,6 +13,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -29,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +57,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     private EditText nameEt, phoneEt, countryEt, stateEt, cityEt, addressEt, emailEt, passwordEt, cPasswordEt;
     private Button registerBtn;
     private TextView registerSellerTv;
+    private RelativeLayout toolbarRl;
 
     //permission constants
     private static final int LOCATION_REQUEST_CODE = 100;
@@ -85,6 +88,8 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
 
+        SharedPreferences sharedPref = getSharedPreferences("settingsLayoutsColors", MODE_PRIVATE);
+
         //init UI views
         backBtn = findViewById(R.id.backBtn);
         gpsBtn = findViewById(R.id.gpsBtn);
@@ -100,6 +105,28 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         cPasswordEt = findViewById(R.id.cPasswordEt);
         registerBtn = findViewById(R.id.registerBtn);
         registerSellerTv = findViewById(R.id.registerSellerTv);
+        toolbarRl = findViewById(R.id.toolbarRl);
+
+        String txt = sharedPref.getString("dane", "default");
+        if(txt.isEmpty()){
+            toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+        }
+        else{
+            switch (txt){
+                case "default":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+                    break;
+                case "option2":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option2);
+                    break;
+                case "option3":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option3);
+                    break;
+                case "option4":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option4);
+                    break;
+            };
+        }
 
         //init permissions array
         locationPermissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};

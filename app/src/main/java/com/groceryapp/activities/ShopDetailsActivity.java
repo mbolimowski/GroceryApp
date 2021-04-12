@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,7 @@ public class ShopDetailsActivity extends AppCompatActivity {
     private ImageButton callBtn, mapBtn, cartBtn, backBtn, filterProductBtn;
     private EditText searchProductEt;
     private RecyclerView productsRv;
+    private RelativeLayout toolbarRl;
 
     private String shopUid, myLatitude, myLongitude, myPhone, shopLatitude, shopLongitude, shopName, shopEmail, shopPhone, shopAddress;
     public String deliveryFee;
@@ -72,6 +76,8 @@ public class ShopDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_details);
 
+        SharedPreferences sharedPref = getSharedPreferences("settingsLayoutsColors", MODE_PRIVATE);
+
         shopIv = findViewById(R.id.shopIv);
         shopNameTv = findViewById(R.id.shopNameTv);
         phoneTv = findViewById(R.id.phoneTv);
@@ -87,6 +93,28 @@ public class ShopDetailsActivity extends AppCompatActivity {
         filterProductBtn = findViewById(R.id.filterProductBtn);
         searchProductEt = findViewById(R.id.searchProductEt);
         productsRv = findViewById(R.id.productsRv);
+        toolbarRl = findViewById(R.id.toolbarRl);
+
+        String txt = sharedPref.getString("dane", "default");
+        if(txt.isEmpty()){
+            toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+        }
+        else{
+            switch (txt){
+                case "default":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+                    break;
+                case "option2":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option2);
+                    break;
+                case "option3":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option3);
+                    break;
+                case "option4":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option4);
+                    break;
+            };
+        }
 
         //init progress dialog
         progressDialog = new ProgressDialog(this);

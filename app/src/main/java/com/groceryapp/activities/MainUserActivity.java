@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -38,8 +40,8 @@ import java.util.HashMap;
 public class MainUserActivity extends AppCompatActivity {
 
     private TextView nameTv, emailTv, phoneTv, tabOrdersTv, tabShopsTv;
-    private RelativeLayout shopsRl, ordersRl;
-    private ImageButton logoutBtn, editProfileBtn;
+    private RelativeLayout shopsRl, ordersRl, toolbarRl;
+    private ImageButton logoutBtn, editProfileBtn, settingsProfileBtn;
     private ImageView profileIv;
     private RecyclerView shopsRv, ordersRv;
 
@@ -52,10 +54,21 @@ public class MainUserActivity extends AppCompatActivity {
     private ArrayList<ModelOrderUser> ordersList;
     private AdapterOrderUser adapterOrderUser;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_user);
+
+        //trying new things
+
+        //setTheme(R.drawable.shape_rect04);
+        //getApplication().setTheme(R.drawable.shape_rect06);
+        //toolbarRl = findViewById(R.id.toolbarRl);
+        //toolbarRl.setBackgroundResource(R.drawable.shape_rect_option4);
+        //toolbarRl.setBackground(R.drawable.shape_rect06);
+        //toolbarRl.setBackground(android.graphics.drawable.);
+        //
 
         nameTv = findViewById(R.id.nameTv);
         logoutBtn = findViewById(R.id.logoutBtn);
@@ -69,6 +82,7 @@ public class MainUserActivity extends AppCompatActivity {
         profileIv = findViewById(R.id.profileIv);
         shopsRv = findViewById(R.id.shopsRv);
         ordersRv = findViewById(R.id.ordersRv);
+        settingsProfileBtn = findViewById(R.id.settingsProfileBtn);
 
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
@@ -106,6 +120,13 @@ public class MainUserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //show orders
                 showOrdersUI();
+            }
+        });
+        settingsProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // show settings activity
+                startActivity(new Intent(MainUserActivity.this, SettingsActivity.class));
             }
         });
     }
