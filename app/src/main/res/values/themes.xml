@@ -22,4 +22,28 @@
 
     <style name="Theme.GroceryApp.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- Option2 application theme. -->
+    <style name="Theme.GroceryApp.Option2" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryOption2</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkOption2</item>
+        <item name="colorAccent">@color/colorAccentOption2</item>
+    </style>
+
+    <!-- Option2 application theme. -->
+    <style name="Theme.GroceryApp.Option3" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryOption3</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkOption3</item>
+        <item name="colorAccent">@color/colorAccentOption3</item>
+    </style>
+
+    <!-- Option2 application theme. -->
+    <style name="Theme.GroceryApp.Option4" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryOption4</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkOption4</item>
+        <item name="colorAccent">@color/colorAccentOption4</item>
+    </style>
+
 </resources>

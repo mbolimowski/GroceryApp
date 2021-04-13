@@ -1,6 +1,8 @@
 package com.groceryapp.activities;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -13,9 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Patterns;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
@@ -23,6 +29,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private ImageButton backBtn;
     private EditText emailEt;
     private Button recoverBtn;
+    private RelativeLayout toolbarRl;
 
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
@@ -35,11 +42,55 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
         emailEt = findViewById(R.id.emailEt);
         recoverBtn = findViewById(R.id.recoverBtn);
+        toolbarRl = findViewById(R.id.toolbarRl);
 
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
+
+        //make fullscreen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final WindowInsetsController insetsController = getWindow().getInsetsController();
+            if (insetsController != null) {
+                insetsController.hide(WindowInsets.Type.statusBars());
+            }
+        } else {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+            );
+        }
+
+        SharedPreferences sharedPref = getSharedPreferences("settingsLayoutsColors", MODE_PRIVATE);
+        String txt = sharedPref.getString("dane", "default");
+        if(txt.isEmpty()){
+            toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+        }
+        else{
+            switch (txt){
+                case "default":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+                    recoverBtn.setBackgroundResource(R.drawable.shape_rect01);
+                    setTheme(R.style.Theme_GroceryApp_NoActionBar);
+                    break;
+                case "option2":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option2);
+                    recoverBtn.setBackgroundResource(R.drawable.shape_rect_option2);
+                    setTheme(R.style.Theme_GroceryApp_Option2);
+                    break;
+                case "option3":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option3);
+                    recoverBtn.setBackgroundResource(R.drawable.shape_rect_option3);
+                    setTheme(R.style.Theme_GroceryApp_Option3);
+                    break;
+                case "option4":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option4);
+                    recoverBtn.setBackgroundResource(R.drawable.shape_rect_option4);
+                    setTheme(R.style.Theme_GroceryApp_Option4);
+                    break;
+            };
+        }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

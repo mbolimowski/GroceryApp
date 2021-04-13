@@ -13,6 +13,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -20,14 +21,19 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -56,6 +62,7 @@ public class ProfileEditUserActivity extends AppCompatActivity implements Locati
     private ImageView profileIv;
     private EditText nameEt, phoneEt, countryEt, stateEt, cityEt, addressEt;
     private Button updateBtn;
+    private RelativeLayout toolbarRl;
 
     //permission constants
     private static final int LOCATION_REQUEST_CODE = 100;
@@ -96,6 +103,50 @@ public class ProfileEditUserActivity extends AppCompatActivity implements Locati
         cityEt = findViewById(R.id.cityEt);
         addressEt = findViewById(R.id.addressEt);
         updateBtn = findViewById(R.id.updateBtn);
+        toolbarRl = findViewById(R.id.toolbarRl);
+
+        //make fullscreen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final WindowInsetsController insetsController = getWindow().getInsetsController();
+            if (insetsController != null) {
+                insetsController.hide(WindowInsets.Type.statusBars());
+            }
+        } else {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+            );
+        }
+
+        SharedPreferences sharedPref = getSharedPreferences("settingsLayoutsColors", MODE_PRIVATE);
+        String txt = sharedPref.getString("dane", "default");
+        if(txt.isEmpty()){
+            toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+        }
+        else{
+            switch (txt){
+                case "default":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+                    updateBtn.setBackgroundResource(R.drawable.shape_rect01);
+                    setTheme(R.style.Theme_GroceryApp_NoActionBar);
+                    break;
+                case "option2":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option2);
+                    updateBtn.setBackgroundResource(R.drawable.shape_rect_option2);
+                    setTheme(R.style.Theme_GroceryApp_Option2);
+                    break;
+                case "option3":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option3);
+                    updateBtn.setBackgroundResource(R.drawable.shape_rect_option3);
+                    setTheme(R.style.Theme_GroceryApp_Option3);
+                    break;
+                case "option4":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option4);
+                    updateBtn.setBackgroundResource(R.drawable.shape_rect_option4);
+                    setTheme(R.style.Theme_GroceryApp_Option4);
+                    break;
+            };
+        }
 
         //init permissions array
         locationPermissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};

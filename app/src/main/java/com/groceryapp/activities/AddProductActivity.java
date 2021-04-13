@@ -13,17 +13,23 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +55,7 @@ public class AddProductActivity extends AppCompatActivity {
     private EditText titleEt, descriptionEt, quantityEt, priceEt, discountedPriceEt, discountedNoteEt;
     private TextView categoryTv;
     private SwitchCompat discountSwitch;
+    private RelativeLayout toolbarRl;
 
     //permission constants
     private static final int CAMERA_REQUEST_CODE = 200;
@@ -85,6 +92,50 @@ public class AddProductActivity extends AppCompatActivity {
         discountedNoteEt = findViewById(R.id.discountedNoteEt);
         categoryTv = findViewById(R.id.categoryTv);
         discountSwitch = findViewById(R.id.discountSwitch);
+        toolbarRl = findViewById(R.id.toolbarRl);
+
+        //make fullscreen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final WindowInsetsController insetsController = getWindow().getInsetsController();
+            if (insetsController != null) {
+                insetsController.hide(WindowInsets.Type.statusBars());
+            }
+        } else {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+            );
+        }
+
+        SharedPreferences sharedPref = getSharedPreferences("settingsLayoutsColors", MODE_PRIVATE);
+        String txt = sharedPref.getString("dane", "default");
+        if(txt.isEmpty()){
+            toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+        }
+        else{
+            switch (txt){
+                case "default":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+                    addProductBtn.setBackgroundResource(R.drawable.shape_rect01);
+                    setTheme(R.style.Theme_GroceryApp_NoActionBar);
+                    break;
+                case "option2":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option2);
+                    addProductBtn.setBackgroundResource(R.drawable.shape_rect_option2);
+                    setTheme(R.style.Theme_GroceryApp_Option2);
+                    break;
+                case "option3":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option3);
+                    addProductBtn.setBackgroundResource(R.drawable.shape_rect_option3);
+                    setTheme(R.style.Theme_GroceryApp_Option3);
+                    break;
+                case "option4":
+                    toolbarRl.setBackgroundResource(R.drawable.shape_rect_option4);
+                    addProductBtn.setBackgroundResource(R.drawable.shape_rect_option4);
+                    setTheme(R.style.Theme_GroceryApp_Option4);
+                    break;
+            };
+        }
 
         //on start is unchecked so hide discountPriceEt and discountNoteEt
         discountedPriceEt.setVisibility(View.GONE);

@@ -46,15 +46,19 @@ public class SplashActivity extends AppCompatActivity {
             switch (txt){
                 case "default":
                     layoutRl.setBackgroundResource(R.drawable.shape_rect01);
+                    setTheme(R.style.Theme_GroceryApp_NoActionBar);
                     break;
                 case "option2":
                     layoutRl.setBackgroundResource(R.drawable.shape_rect_option2);
+                    setTheme(R.style.Theme_GroceryApp_Option2);
                     break;
                 case "option3":
                     layoutRl.setBackgroundResource(R.drawable.shape_rect_option3);
+                    setTheme(R.style.Theme_GroceryApp_Option3);
                     break;
                 case "option4":
                     layoutRl.setBackgroundResource(R.drawable.shape_rect_option4);
+                    setTheme(R.style.Theme_GroceryApp_Option4);
                     break;
             };
         }

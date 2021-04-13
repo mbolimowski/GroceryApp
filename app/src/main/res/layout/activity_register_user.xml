@@ -198,6 +198,7 @@
         android:id="@+id/registerBtn"
         android:text="Register"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:background="@drawable/shape_rect01"
         android:minWidth="120dp"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"

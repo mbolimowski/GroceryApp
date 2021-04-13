@@ -7,11 +7,20 @@
     <color name="colorGray01">#c9c9c9</color>
     <color name="colorGray02">#959595</color>
     <color name="colorBlack">#000</color>
+    <color name="colorPrimaryOption4">#000</color>
+    <color name="colorPrimaryDarkOption4">#000</color>
+    <color name="colorAccentOption4">#000</color>
     <color name="colorGreen">#4CAF50</color>
     <color name="colorRed">#F4511E</color>
     <color name="colorGray00">#f5f0f0</color>
     <color name="colorYellow">#FFC107</color>
+    <color name="colorPrimaryOption2">#FFC107</color>
+    <color name="colorPrimaryDarkOption2">#FFC107</color>
+    <color name="colorAccentOption2">#FFC107</color>
     <color name="colorPurple">#673AB7</color>
+    <color name="colorPrimaryOption3">#673AB7</color>
+    <color name="colorPrimaryDarkOption3">#673AB7</color>
+    <color name="colorAccentOption3">#673AB7</color>
 
 
 </resources>

@@ -12,11 +12,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -95,6 +99,19 @@ public class ShopDetailsActivity extends AppCompatActivity {
         productsRv = findViewById(R.id.productsRv);
         toolbarRl = findViewById(R.id.toolbarRl);
 
+        //make fullscreen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final WindowInsetsController insetsController = getWindow().getInsetsController();
+            if (insetsController != null) {
+                insetsController.hide(WindowInsets.Type.statusBars());
+            }
+        } else {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+            );
+        }
+
         String txt = sharedPref.getString("dane", "default");
         if(txt.isEmpty()){
             toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
@@ -103,15 +120,19 @@ public class ShopDetailsActivity extends AppCompatActivity {
             switch (txt){
                 case "default":
                     toolbarRl.setBackgroundResource(R.drawable.shape_rect01);
+                    setTheme(R.style.Theme_GroceryApp_NoActionBar);
                     break;
                 case "option2":
                     toolbarRl.setBackgroundResource(R.drawable.shape_rect_option2);
+                    setTheme(R.style.Theme_GroceryApp_Option2);
                     break;
                 case "option3":
                     toolbarRl.setBackgroundResource(R.drawable.shape_rect_option3);
+                    setTheme(R.style.Theme_GroceryApp_Option3);
                     break;
                 case "option4":
                     toolbarRl.setBackgroundResource(R.drawable.shape_rect_option4);
+                    setTheme(R.style.Theme_GroceryApp_Option4);
                     break;
             };
         }
